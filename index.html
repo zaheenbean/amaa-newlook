@@ -1110,11 +1110,16 @@ function prevHist(n){
 // Text before the first dated entry is kept as a block of its own (date ""). For each: what it says without its
 // "(date, initials, drawing)" opening, table rows and result, and its drawing, for Copy to today.
 const RES_TAIL=/\s*\[(APPROVED|SEE COMMENTS|OPEN|CONDITIONAL|DISAPPROVED|NOT INSPECTED)\]\s*$/;
+// A section's standing closing line: its own short paragraph that ends with "further inspection" or "reinspected"
+// in some wording ("Sprinkler systems to be reinspected.", "Reinspection required", "Further inspection is required.").
+// The new note goes above it, so it stays the section's last line.
+const END_RE=/(?:further\s+inspections?|re-?\s?inspect(?:ed|ions?)?)(?:\s+(?:is|are|will\s+be|to\s+be|shall\s+be))?(?:\s+(?:required|needed|necessary|pending|performed|conducted|scheduled|to\s+follow))?\s*[.!]*\s*$/i;
+const isEndLine=t=>{t=plain(t).trim();return t.length<=120&&!DATE_RE.test(t)&&!/^Comments:/i.test(t)&&END_RE.test(t)};
 function prevBlocks(t){
  const bs=[];let cur=null;
  String(t).split("\n").forEach(l=>{const m=plain(l).trim().match(DATE_RE);if(m||!cur){cur={lines:[],m:m?m[1]:""};bs.push(cur)}cur.lines.push(l)});
  return bs.map(b=>{const raw=b.lines.join("\n").replace(/\s+$/,""),p=b.m?drParts(plain(b.lines[0]).trim()):null;
-  const text=b.lines.map((l,j)=>j?l:l.replace(/^\s*(?:Comments:\s*)?\([^)]*\)\s*/,"")).filter(l=>!l.startsWith(TB)).join("\n").replace(RES_TAIL,"").replace(/\n{3,}/g,"\n\n").replace(/^\s+|\s+$/g,"");
+  const text=b.lines.map((l,j)=>j?l:l.replace(/^\s*(?:Comments:\s*)?\([^)]*\)\s*/,"")).filter(l=>!l.startsWith(TB)).join("\n").replace(RES_TAIL,"").replace(/\n[^\n]*$/,m=>isEndLine(m)?"":m).replace(/\n{3,}/g,"\n\n").replace(/^\s+|\s+$/g,"");
   return {raw,date:b.m?noteDate(b.m):"",dr:p?p.slot:"",text,tb:b.lines.some(l=>l.startsWith(TB))}}).filter(b=>b.raw.trim());
 }
 function prevNote(n){
@@ -1286,7 +1291,7 @@ $("f_insp").addEventListener("input",refreshPrefixes);$("xins").addEventListener
 function renderCards(){
  // Cards already typed into keep what is there; untouched ones take the saved notes or today's report.
  const old={};ITEMS.forEach((x,i)=>{const el=$("n_"+i);if(el&&(el.dataset.auto==null||$("s_"+i).value))old[x.n]=[$("s_"+i).value,$("d_"+i).value,el.dataset.auto!=null?"":getMarked(el)]});
- $("secs").innerHTML=ITEMS.map((x,i)=>{const o=old[x.n]||draftEntry(x)||todayEntry(x)||["",x.d||"",""],pre=o[2]?"":autoPrefix();return `<div class="sec-card card hide" id="c_${i}" style="margin-bottom:10px"><h3>${esc(x.n)} <small>${esc(x.r)}</small></h3><div class="grid"><div><label for="s_${i}">Result</label><select id="s_${i}"><option value="">Select result</option>${RES.map(s=>`<option value="${s}" ${resOf(o[0])===s?"selected":""}>${RLBL[s]}</option>`).join("")}</select></div><div><label for="d_${i}">Drawing / reference (number and date)</label><input id="d_${i}" value="${esc(o[1])}"></div></div>${prevNote(x.n)}${ncrFixHTML(i,x.n)}<div class="edhead"><label id="nl_${i}">Observed (measured values, locations)</label><div class="edtools"><button type="button" class="sec mini ncrbtn" data-mark="1" data-i="${i}">Mark NCR (red)</button><button type="button" class="sec mini" data-mark="0" data-i="${i}" title="Select red words in the note, then choose this to make them black again">Unmark NCR</button></div></div><div class="ed" id="n_${i}" contenteditable="true" role="textbox" aria-multiline="true" aria-labelledby="nl_${i}" data-ph="Type or paste notes. Select words, then Mark NCR to turn them red."${pre?` data-auto="${esc(pre)}"`:""}>${o[2]?edHTML(o[2]):edHTML(pre+" ")}</div><div class="hint" id="edh_${i}"></div><div class="simnote" id="sim_${i}" role="status" hidden></div><div class="nfs" id="nfs_${i}" role="status" hidden></div><div id="tbs_${i}"></div><div class="row tbadd"><select id="tba_${i}" aria-label="Kind of table to add"></select><button type="button" class="sec mini" data-tbadd="${i}">+ Add table</button></div></div>`}).join("");
+ $("secs").innerHTML=ITEMS.map((x,i)=>{const o=old[x.n]||draftEntry(x)||todayEntry(x)||["",x.d||"",""],pre=o[2]?"":autoPrefix();return `<div class="sec-card card hide" id="c_${i}" style="margin-bottom:10px"><h3>${esc(x.n)} <small>${esc(x.r)}</small></h3><div class="grid"><div><label for="s_${i}">Result</label><select id="s_${i}"><option value="">Select result</option>${RES.map(s=>`<option value="${s}" ${resOf(o[0])===s?"selected":""}>${RLBL[s]}</option>`).join("")}</select></div><div><label for="d_${i}">Drawing / reference (number and date)</label><input id="d_${i}" value="${esc(o[1])}"></div></div>${prevNote(x.n)}${ncrFixHTML(i,x.n)}<div class="edhead"><label id="nl_${i}">Observed (measured values, locations)</label><div class="edtools"><button type="button" class="sec mini ncrbtn" data-mark="1" data-i="${i}">Mark NCR (red)</button><button type="button" class="sec mini" data-mark="0" data-i="${i}" title="Select red words in the note, then choose this to make them black again">Unmark NCR</button></div></div><div class="ed" id="n_${i}" contenteditable="true" role="textbox" aria-multiline="true" aria-labelledby="nl_${i}" data-ph="Type or paste notes. Select words, then Mark NCR to turn them red."${pre?` data-auto="${esc(pre)}"`:""}>${o[2]?edHTML(o[2]):edHTML(pre+" ")}</div><div class="hint" id="edh_${i}"></div><div class="simnote" id="sim_${i}" role="status" hidden></div><div class="simnote" id="sgn_${i}" role="status" hidden></div><div class="nfs" id="nfs_${i}" role="status" hidden></div><div id="tbs_${i}"></div><div class="row tbadd"><select id="tba_${i}" aria-label="Kind of table to add"></select><button type="button" class="sec mini" data-tbadd="${i}">+ Add table</button></div></div>`}).join("");
  ITEMS.forEach((x,i)=>renderTables(i));
  ITEMS.forEach((x,i)=>{const t=$("n_"+i);
   t.addEventListener("input",()=>{if(t.dataset.auto!=null&&getMarked(t)!==t.dataset.auto)delete t.dataset.auto;noteDr(i);clearTimeout(t._s);t._s=setTimeout(()=>{simCheck(i);ncrSuggest(i)},300)});
@@ -1342,7 +1347,23 @@ function simInfo(i){
  if(best&&best.s>=0.8)out.push(`${best.s>=0.995?"Same text as":Math.round(best.s*100)+"% similar to"} the ${best.date||"previous"} entry. Check that it still describes this visit.`);
  return out;
 }
-function simCheck(i){const el=$("sim_"+i);if(!el)return;const m=simInfo(i);el.hidden=!m.length;el.textContent=m.join(" ")}
+function simCheck(i){const el=$("sim_"+i);if(!el)return;const m=simInfo(i);el.hidden=!m.length;el.textContent=m.join(" ");signCheck(i)}
+// An item the previous report signed off: Approved checked on its page 1 summary row, or its comments end with
+// "… is ready for our sign off." (or the builder saved it as Approved). It normally gets no new comments, so writing one is flagged.
+const SIGN_RE=/\bready\s+for\s+(?:our\s+|the\s+|final\s+)*sign[\s-]?off\b/i;
+function signedOff(n){
+ if(!PREV)return "";const k=ikey(n);
+ for(const l of String(PREV.text||"").split("\n")){const b=plain(l).match(/[☐☒]/g);if(!b||b.length<2||typeKey(l.replace(TB,""))!==k)continue;
+  if(b[0]==="☒"&&b[1]==="☐")return "it is marked Approved on page 1 of the previous report";break}
+ const o=Array.isArray(PREV.notes)&&PREV.notes.find(x=>ikey(x.n)===k),h=o&&o.hist&&o.hist[o.hist.length-1];
+ if(h&&h.s==="APPROVED")return "it was marked Approved in the previous report";
+ const last=plain(prevHist(n)).split("\n").map(s=>s.replace(RES_TAIL,"").trim()).filter(Boolean).pop()||"";
+ return SIGN_RE.test(last)?`the previous report says “${last.length>90?last.slice(0,90)+"…":last}”`:"";
+}
+// Shown once something is typed in the note (not just the automatic "(date, initials)" opening).
+function signCheck(i){const el=$("sgn_"+i),t=$("n_"+i);if(!el||!t||!ITEMS[i])return;
+ const why=t.dataset.auto==null&&plain(getMarked(t)).replace(/^\s*\([^)]*\)\s*/,"").trim()?signedOff(ITEMS[i].n):"";
+ el.hidden=!why;el.textContent=why?`Signed off: ${why}. Signed-off items normally get no new comments. Check this item still needs one.`:""}
 
 // A report already generated for this date comes back into the form, so it can be edited and generated again.
 function todayEntry(x){
@@ -1987,6 +2008,10 @@ async function buildFromTemplate(tpl,c){
   // End of the last entry: an entry can go on past its dated line (more paragraphs, test tables).
   if(s.com){s.end=topEl(p);(s.ps||(s.ps=[])).push(p)}
  });
+ // A section that ends with a standing closing line (isEndLine): today's note goes above it.
+ Object.values(sect).forEach(s=>{if(!s.ps)return;let k=s.ps.length-1;
+  while(k>0){const p=s.ps[k];if(p===s.com||p===s.last||topEl(p)!==p||!isEndLine(pText(p)))break;k--}
+  if(k<s.ps.length-1){s.close=s.ps[k+1];s.end=topEl(s.ps[k])}});
  if(tpl.blank)clearBlank(doc);
  // Each further day: a copy of the Date line under it, without what comes before its first tab (City/County Of), so its columns line up.
  if(days.length>1)ps.filter(dayRow).forEach(row=>{
@@ -2874,6 +2899,8 @@ $("gen").onclick=async()=>{
   if(!x.s)qa.push(`${x.n}: no result selected.`);
   if(!x.t)qa.push(`${x.n}: no observations entered.`);
   if(x.t&&!x.d)qa.push(`${x.n}: no drawing or reference cited.`);
+  const so=plain(x.t).replace(/^\s*\([^)]*\)\s*/,"").trim()||(x.tb||[]).length?signedOff(x.n):"";
+  if(so)qa.push(`${x.n}: has a new comment, but ${so}. Signed-off items normally get no new comments.`);
   if(SUBJ.test(x.t))qa.push(`${x.n}: subjective or vague wording ("${x.t.match(SUBJ)[0]}"). Use a measured value or "not observed".`);
   if(x.s==="SEE COMMENTS"&&!ois.length)qa.push(`${x.n} is marked See Comments but the open items list is empty. List what is still open, or mark it Approved.`)});
  ITEMS.forEach((x,i)=>{if(picked.has(i)){simInfo(i).forEach(m=>qa.push(`${x.n}: ${m}`));qa.push(...tableQA(x.n));
@@ -2910,7 +2937,7 @@ $("gen").onclick=async()=>{
  await savePrev(date,sec,ini);
 };
 // Which copy this is: the claude.ai page, the offline HTML file or the desktop app (all built from the same version).
-const VER=90;$("ver").textContent=`Version ${VER}${APP?" · desktop app":PWA?" · phone app":location.protocol==="file:"?" · offline":""}${DEMO?" · demo V3":""}`;
+const VER=91;$("ver").textContent=`Version ${VER}${APP?" · desktop app":PWA?" · phone app":location.protocol==="file:"?" · offline":""}${DEMO?" · demo V3":""}`;
 /* ---- Usage screen: reads every laptop's log from the projects folder and works out the funnel, stalls and flags. ---- */
 const US_STEPS=["choose","details","pick","notes","review"],US_SNAME={choose:"Choose project",details:"Report details",pick:"Pick inspections",notes:"Write notes",review:"Review and save"};
 const US_CNAME={go:"Continue",start:"Next: choose inspections",mk:"Create entries",gen:"Generate report",dlbtn:"Save Word report",newrep:"Start another report",homebtn:"Home",b0:"Back (details)",b1:"Back (inspections)",b2:"Change inspections",addins:"Add inspector",addc:"Add item",all:"Select all",prevbtn:"View previous report",addoi:"Add open item",phonebtn:"Send photos from phone",openw:"Open in Word",openf:"Show in folder",rootbtn:"Browse for folder",rootuse:"Use this folder",rootretry:"Retry folder",rp_phone:"Replace from phone",rp_file:"Replace from computer",mu_done:"Markup: Done",mu_cancel:"Markup: Cancel",ph_done:"Phone window: Done","data-pcopy":"Copy to today",themebtn:"Color theme","n_#":"the notes box","d_#":"the drawing box","s_#":"the result selector",f_proj:"the project number",f_date:"the date",f_in:"the time in",f_out:"the time out",f_insp:"the inspector name",f_email:"the inspector email"};
