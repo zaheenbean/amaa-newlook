@@ -198,7 +198,57 @@ button.sec{background:transparent;color:var(--brand);border:1px solid var(--bran
 .drop:hover,.drop.over{border-color:var(--accent);background:var(--fill)}
 .drop b{color:var(--brand);font-size:15px}.drop span{font-size:13px}
 .drop:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-#outlook{width:100%}#outlook small{font-weight:400}#prevmsg:empty{min-height:0;margin:0}
+#outlook{width:100%}#outlook small{font-weight:400}
+#calov{position:fixed;inset:0;z-index:1000;background:rgba(10,14,20,.5);display:flex;align-items:center;justify-content:center;padding:16px}#calov[hidden]{display:none}
+#calbox{width:min(780px,100%);max-height:calc(100vh - 32px);display:flex;flex-direction:column;border:1px solid var(--edge);border-radius:16px;padding:16px 18px;background:var(--card);color:var(--text);font-size:14px;text-align:left;box-shadow:0 20px 60px rgba(0,0,0,.35);overflow:auto}
+#calbox .calhd b{font-size:17px}
+#calbox .calhd{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-bottom:6px}#calbox .calhd b{margin-right:auto}
+#calbox .calsteps{margin:6px 0 10px;padding-left:20px}#calbox .calsteps li{margin:3px 0}#calbox .calnote{font-size:12px;margin:8px 0 0}
+/* Calendar grid (week and month), Outlook-like */
+#calbox.calwide{width:min(1240px,100%);height:calc(100vh - 32px)}
+#calbox .calnav{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:2px 0 10px}
+#calbox .calnav .rng{display:inline-flex;flex-direction:column;font-size:16px;font-weight:700;margin:0 auto 0 8px}
+#calbox .calnav .navb{min-width:34px;padding:5px 10px}
+#calbox .seg{display:inline-flex;border:1px solid var(--edge);border-radius:9px;overflow:hidden}
+#calbox .seg button{border:0;border-radius:0;margin:0;background:transparent;color:var(--text);padding:5px 14px;font:inherit;font-size:13px;font-weight:600;box-shadow:none;min-height:0}
+#calbox .seg button[aria-pressed="true"]{background:var(--fill);color:var(--brand)}
+#calbox .cevs{flex:1;min-height:0;overflow:auto;border:1px solid var(--edge);border-radius:12px;background:var(--card)}
+#calbox .wk{--cols:56px repeat(7,minmax(120px,1fr));--h:52px}
+#calbox .wkrow{display:grid;grid-template-columns:var(--cols);min-width:900px}
+#calbox .wkhead{position:sticky;top:0;z-index:3;background:var(--card);border-bottom:1px solid var(--edge)}
+#calbox .wkhead>div{padding:8px 6px 6px;text-align:center;font-size:12px;color:var(--muted);border-left:1px solid var(--edge)}#calbox .wkhead>div:first-child{border-left:0}
+#calbox .wkhead .dnum{display:block;font-size:20px;font-weight:600;color:var(--text);line-height:1.3}
+#calbox .wkhead .dnum i{font-style:normal;display:inline-block;min-width:34px;padding:0 4px;border-radius:17px}#calbox .wkhead .tod .dnum i{background:var(--brand);color:var(--btntxt)}#calbox .wkhead .tod{color:var(--brand);font-weight:700}
+#calbox .wkall{border-bottom:1px solid var(--edge)}#calbox .wkall>div{min-height:28px;padding:3px;border-left:1px solid var(--edge)}#calbox .wkall>div:first-child{border-left:0;font-size:11px;color:var(--muted);text-align:right;padding:6px 6px 0 0}
+#calbox .tlab{position:relative}#calbox .tlab span{position:absolute;right:6px;transform:translateY(-50%);font-size:11px;color:var(--muted);white-space:nowrap}
+#calbox .dcol{position:relative;border-left:1px solid var(--edge);background:repeating-linear-gradient(to bottom,var(--edge) 0 1px,transparent 1px var(--h))}
+#calbox .dcol.tod{background-color:var(--tint,rgba(11,92,173,.05))}
+#calbox .nowl{position:absolute;left:0;right:0;height:2px;background:#d32f2f;z-index:2}#calbox .nowl::before{content:"";position:absolute;left:-5px;top:-4px;width:10px;height:10px;border-radius:5px;background:#d32f2f}
+#calbox .cev{position:absolute;display:block;text-align:left;overflow:hidden;margin:0;padding:3px 6px;border:0;border-left:4px solid var(--brand);border-radius:7px;background:var(--fill);color:var(--text);font:inherit;font-size:12px;line-height:1.3;font-weight:400;box-shadow:0 1px 2px rgba(0,0,0,.12);cursor:pointer;min-height:0;z-index:1}
+#calbox .cev:hover,#calbox .cev:focus-visible{z-index:4;box-shadow:0 0 0 2px var(--brand);overflow:visible;height:auto!important;min-height:var(--hh)}
+#calbox .cev b{display:block;font-weight:600}#calbox .cev .et{color:var(--muted);font-size:11px}#calbox .cev small{display:block;color:var(--muted)}
+#calbox .cev .cp{display:block;color:var(--ok);font-size:11px;font-weight:600}
+#calbox .cev.nom{background:var(--bg);border-left-color:var(--line);border-left-style:dashed}#calbox .cev.nom .cp{color:var(--muted);font-weight:400}
+#calbox .cev.allday,#calbox .cev.chip{position:static;width:100%;margin:2px 0;padding:2px 6px;white-space:nowrap;text-overflow:ellipsis;height:auto}
+#calbox .cev.allday:hover,#calbox .cev.chip:hover{overflow:hidden}
+#calbox .mo{display:grid;grid-template-columns:repeat(7,minmax(110px,1fr));grid-template-rows:auto repeat(6,minmax(96px,1fr));min-width:820px}
+#calbox .mo .mdh{position:sticky;top:0;z-index:2;background:var(--card);padding:6px;font-size:12px;font-weight:600;color:var(--muted);text-align:center;border-bottom:1px solid var(--edge);min-height:0}
+#calbox .mcell{border-right:1px solid var(--edge);border-bottom:1px solid var(--edge);padding:4px;min-width:0}#calbox .mcell:nth-child(7n){border-right:0}
+#calbox .mcell.out{background:var(--bg)}#calbox .mcell.out .mdn{opacity:.55}
+#calbox .mdn{display:inline-block;min-width:24px;padding:1px 4px;border-radius:12px;font-size:13px;font-weight:600;text-align:center}
+#calbox .mcell.tod .mdn{background:var(--brand);color:var(--btntxt)}
+#calbox .more{display:block;border:0;background:none;color:var(--brand);font:inherit;font-size:12px;font-weight:600;padding:2px 6px;cursor:pointer;box-shadow:none;min-height:0}
+#calbox .calsync{margin:10px 0 0;padding:10px 12px;border-radius:10px;background:var(--fill);font-size:13px;overflow-wrap:anywhere}
+#calbox .cdsum{display:block;font-size:12px;font-weight:400;color:var(--muted)}
+#calbox .dcol>.cev{padding-right:28px}
+/* z-index 5: above a hovered (enlarged, z 4) visit block, so the circle is always what gets the click */
+#calbox .cchk{position:absolute;z-index:5;width:22px;height:22px;min-height:0;margin:0;padding:0;border-radius:50%;border:1.5px solid var(--line);background:var(--card);color:transparent;font:700 13px/19px system-ui,sans-serif;text-align:center;cursor:pointer;box-shadow:none}
+#calbox .cchk:hover:not(:disabled){color:var(--muted);border-color:var(--ok)}
+#calbox .cchk[aria-pressed="true"]{background:var(--ok);border-color:var(--ok);color:var(--btntxt)}#calbox .cchk:disabled{cursor:default;opacity:1}
+#calbox .crow{display:flex;align-items:center;gap:4px;margin:2px 0;min-width:0}#calbox .crow .cchk{position:static;flex:none;width:16px;height:16px;font-size:10px;line-height:13px}#calbox .crow .cev{flex:1;min-width:0;width:auto;margin:0}
+#calbox .cev.done{border-left-color:var(--ok);opacity:.72}#calbox .cev.done b,#calbox .cev.chip.done,#calbox .cev.allday.done{text-decoration:line-through;text-decoration-color:var(--muted)}
+#calbox .calpick{margin-top:10px;padding:10px 12px;border-radius:10px;background:var(--fill);display:flex;flex-wrap:wrap;gap:6px;align-items:center}#calbox .calpick span{margin-right:auto}
+#prevmsg:empty{min-height:0;margin:0}
 .chk{display:flex;gap:10px;align-items:center;font-size:15px;font-weight:400;color:var(--text);padding:10px;border:1px solid var(--line);border-radius:6px;margin-bottom:6px;cursor:pointer}
 .chk input{width:20px;height:20px;flex:none}.chk small{color:var(--muted);margin-left:auto;text-align:right}
 .sec-card{border-left:4px solid var(--accent)}.sec-card h3{margin:0 0 8px;font-size:15px}.sec-card h3 small{color:var(--muted);font-weight:400}
@@ -390,7 +440,7 @@ button.pecopy{float:right;margin:0 0 4px 10px;white-space:nowrap}
 :root:not(.demo) .drop{border-radius:16px;border:1.5px dashed var(--line);background:var(--bg);padding:28px 16px;transition:background-color .15s,border-color .15s}
 :root:not(.demo) .drop:hover,:root:not(.demo) .drop.over{background:var(--fill);border-color:var(--accent)}
 :root:not(.demo) .drop:focus-visible{outline:0;box-shadow:0 0 0 4px var(--ring)}
-:root:not(.demo) #outlook{border-radius:12px;padding:13px;background:transparent;box-shadow:inset 0 0 0 1px var(--edge);color:var(--muted)}
+:root:not(.demo) #outlook:disabled{border-radius:12px;padding:13px;background:transparent;box-shadow:inset 0 0 0 1px var(--edge);color:var(--muted)}
 :root:not(.demo) .chk{border:0;border-radius:12px;padding:12px 14px;margin-bottom:6px;background:var(--bg);transition:background-color .15s;font-size:15px;font-weight:500;color:var(--text)}
 :root:not(.demo) .typelist .chk{font-size:14px}
 :root:not(.demo) .tog{font-size:13.5px;font-weight:500;color:var(--text)}:root:not(.demo) .tog.ncrt{color:var(--bad)}
@@ -540,10 +590,11 @@ button.pecopy{float:right;margin:0 0 4px 10px;white-space:nowrap}
 <div class="hint ok" id="prevmsg" aria-live="polite"></div>
 <button type="button" class="sec" id="fcphone" hidden style="margin-top:8px">📱 Send from phone (Field Companion)</button>
 <div class="or">or</div>
-<button type="button" class="sec" id="outlook" disabled>Choose from Outlook calendar <small>(coming soon)</small></button>
+<button type="button" class="sec" id="outlook" disabled aria-haspopup="dialog">Choose from Outlook calendar <small>(desktop app only)</small></button>
 </div>
 <div class="det">
 <div class="hint ok" id="fcmsg" aria-live="polite" hidden style="margin:0 0 10px"></div>
+<div class="hint ok" id="calmsg" aria-live="polite" hidden style="margin:0 0 10px"></div>
 <div class="grid">
 <div><label for="f_date">Date of inspection <i>*</i></label><input type="date" id="f_date"></div>
 <div><label for="f_in">Time arrived</label><input type="time" id="f_in"></div>
@@ -568,6 +619,7 @@ button.pecopy{float:right;margin:0 0 4px 10px;white-space:nowrap}
 </div>
 </div>
 
+<div id="calov" class="noprint" hidden><div id="calbox" role="dialog" aria-modal="true" aria-label="Outlook calendar"></div></div>
 <div class="card noprint hide" id="pick">
 <details class="types" id="types"><summary>Project inspection types <span id="typecount" class="muted"></span></summary><div class="typebody">
 <p class="sub" id="typesub" style="margin:0 0 8px">Check every inspection on this project (from the TR1). The list comes from the AMAA report template; the first Word report keeps only these sections.</p>
@@ -1406,6 +1458,311 @@ document.addEventListener("paste",e=>{
  const fs=[...(e.clipboardData&&e.clipboardData.files||[])];if(!fs.length)return;
  e.preventDefault();takeReport(fs.find(f=>/\.(docx|zip)$/i.test(f.name))||fs[0]);
 });
+/* ---- Outlook calendar (desktop app; "calendar" in DEMO_OFF switches it off). The inspector's calendar is published from
+   Outlook on the web as an ICS link ("Can view titles and locations"); the app keeps the link in its own settings, downloads
+   the calendar (the page never sees the link) and keeps the last copy for no internet. The list shows today, the next 14 days,
+   then the past 7 days (reports written late). An event goes to a project by a project # in its title or location, else by the
+   address in the project folder names ("245 West 38th Street" = "245 W 38 St"). Choosing one fills the project #, the date
+   and the times (as typed values, so a loaded report doesn't replace them). ---- */
+const CAL={text:"",at:"",err:"",list:[]};
+/* Phone/web app (PWA, e.g. the New Look on GitHub): no app host, so the page keeps the link and the last calendar copy in
+   this browser's localStorage (this device only) and downloads it itself. Outlook may refuse a web page's download (no
+   CORS); then the inspector opens the link (the browser downloads calendar.ics) and picks that file ("Open calendar file"). */
+const CALWEB=PWA&&!APP;
+const CALON=(APP||CALWEB)&&!OFF.has("calendar");
+if(CALON){$("outlook").disabled=false;$("outlook").innerHTML="Choose from Outlook calendar"}
+const calLS=(k,v)=>{try{if(v===undefined)return localStorage.getItem(k)||"";if(v)localStorage.setItem(k,v);else localStorage.removeItem(k)}catch(e){}return ""};
+const calHttps=u=>String(u||"").trim().replace(/^webcal:/i,"https:");
+function calWebKeep(text){if(!/BEGIN:VCALENDAR/i.test(text))throw new Error("That isn’t a calendar (.ics) file.");calLS("amaa_caltext",text);calLS("amaa_calat",new Date().toISOString())}
+async function calWebFetch(u){
+ const ctl=new AbortController(),t=setTimeout(()=>ctl.abort(),20000);let r;
+ try{r=await fetch(calHttps(u),{cache:"no-store",credentials:"omit",referrerPolicy:"no-referrer",signal:ctl.signal})}
+ catch(e){throw new Error(navigator.onLine===false?"No internet right now.":"Outlook didn’t let this web page download your calendar.")}
+ finally{clearTimeout(t)}
+ if(!r.ok)throw new Error("The calendar link answered “"+r.status+"”. Check the link, or publish the calendar again in Outlook.");
+ const tx=await r.text();calWebKeep(tx);return tx;
+}
+// Same answer shape as the app's "calendar" command: {has, text, at, err}.
+async function calWebGet(refresh){
+ const u=calLS("amaa_calics");let text=calLS("amaa_caltext"),at=calLS("amaa_calat"),err="";
+ if(!u&&!text)return {has:false};
+ if(u&&(refresh||!text||!at||Date.now()-new Date(at)>5*6e4)){
+  try{text=await calWebFetch(u);at=calLS("amaa_calat")}
+  catch(e){err=e.message+(/download/.test(e.message)?" Tap “Get latest calendar” (your browser downloads calendar.ics), then “Open calendar file” and choose it.":"")}
+ }
+ return {has:true,text,at,err};
+}
+async function calWebSet(u){
+ u=String(u||"").trim();
+ if(!u){["amaa_calics","amaa_caltext","amaa_calat"].forEach(k=>calLS(k,""));return}
+ if(!/^(https|webcal):\/\/[^\s]+$/i.test(u))throw new Error("That doesn’t look like a calendar link. Copy the ICS link from Outlook (it starts with https://).");
+ calLS("amaa_calics",u);calLS("amaa_calat","");
+}
+function calWebFile(){let i=$("calfin");if(!i){i=document.createElement("input");i.type="file";i.id="calfin";i.accept=".ics,text/calendar";i.hidden=true;document.body.appendChild(i);
+ i.addEventListener("change",async()=>{const f=i.files&&i.files[0];i.value="";if(!f)return;
+  try{calWebKeep(await f.text());CAL.text="";calOpen(false)}catch(e){const h=$("calhint");if(h){h.className="hint bad";h.textContent=e.message}else alert(e.message)}})}
+ i.click()}
+function calWebGetLatest(){const u=calLS("amaa_calics");if(u)window.open(calHttps(u),"_blank","noopener,noreferrer")}
+const ymd=d=>d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+const hm=d=>String(d.getHours()).padStart(2,"0")+":"+String(d.getMinutes()).padStart(2,"0");
+const ctm=d=>d.toLocaleTimeString("en-US",{hour:"numeric",minute:"2-digit"});
+const cday=d=>d.toLocaleDateString("en-US",{weekday:"long",month:"long",day:"numeric"});
+function icsUnfold(t){return String(t).replace(/\r?\n[ \t]/g,"").split(/\r?\n/)}
+const icsTxt=s=>String(s||"").replace(/\\n/gi," ").replace(/\\([,;\\])/g,"$1").replace(/\s+/g," ").trim();
+function icsColon(ln){let q=false;for(let i=0;i<ln.length;i++){const c=ln[i];if(c==='"')q=!q;else if(c===":"&&!q)return i}return -1}
+// Times with a TZID are read as this computer's time (an NYC calendar on an NYC laptop); "Z" times are UTC.
+function icsDate(v,P){
+ const m=/^(\d{4})(\d{2})(\d{2})(?:T(\d{2})(\d{2})(\d{2})?(Z)?)?$/.exec(String(v).trim());if(!m)return null;
+ const n=m.slice(1,7).map(x=>+(x||0));
+ if(!m[4])return {d:new Date(n[0],n[1]-1,n[2]),all:true};
+ if(m[7]||P&&/^(utc|gmt|etc\/(utc|gmt)|greenwich standard time|coordinated universal time)$/i.test(P.TZID||""))return {d:new Date(Date.UTC(n[0],n[1]-1,n[2],n[3],n[4],n[5])),all:false};
+ return {d:new Date(n[0],n[1]-1,n[2],n[3],n[4],n[5]),all:false};
+}
+function icsDur(v){const m=/^([+-])?P(?:(\d+)W)?(?:(\d+)D)?(?:T(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?)?$/.exec(String(v).trim());if(!m)return 0;return (m[1]==="-"?-1:1)*((+(m[2]||0)*7+ +(m[3]||0))*864e5+ +(m[4]||0)*36e5+ +(m[5]||0)*6e4+ +(m[6]||0)*1e3)}
+function icsParse(text){
+ const evs=[];let cur=null,sub=0;
+ for(const ln of icsUnfold(text)){
+  if(/^BEGIN:VEVENT$/i.test(ln)){cur={ex:[]};sub=0;continue}
+  if(/^END:VEVENT$/i.test(ln)){if(cur)evs.push(cur);cur=null;continue}
+  if(!cur)continue;
+  if(/^BEGIN:/i.test(ln)){sub++;continue}if(/^END:/i.test(ln)){sub=Math.max(0,sub-1);continue}if(sub)continue; // alarms inside the event
+  const c=icsColon(ln);if(c<0)continue;
+  const [name,...ps]=ln.slice(0,c).split(";"),val=ln.slice(c+1),P={};
+  ps.forEach(p=>{const i=p.indexOf("=");if(i>0)P[p.slice(0,i).toUpperCase()]=p.slice(i+1).replace(/^"|"$/g,"")});
+  switch(name.toUpperCase()){
+   case "SUMMARY":cur.s=icsTxt(val);break;
+   case "LOCATION":cur.l=icsTxt(val);break;
+   case "DTSTART":cur.a=icsDate(val,P);break;
+   case "DTEND":cur.b=icsDate(val,P);break;
+   case "DURATION":cur.dur=icsDur(val);break;
+   case "RRULE":cur.r=val;break;
+   case "EXDATE":val.split(",").forEach(v=>{const x=icsDate(v,P);if(x)cur.ex.push(+x.d)});break;
+   case "RECURRENCE-ID":cur.rid=icsDate(val,P);break;
+   case "UID":cur.uid=val;break;
+   case "STATUS":cur.st=val.trim().toUpperCase();break;
+  }
+ }
+ return evs.filter(e=>e.a);
+}
+// Each event (and each repeat of a recurring one) that starts in [from, to). A changed or deleted repeat is left out of
+// its series (the changed one is its own event, with RECURRENCE-ID).
+function calExpand(evs,from,to){
+ const out=[],moved=new Set(evs.filter(e=>e.rid&&e.uid).map(e=>e.uid+"|"+(+e.rid.d)));
+ evs.forEach(e=>{
+  const len=Math.max(0,e.b?e.b.d-e.a.d:e.dur?e.dur:e.a.all?864e5:0);
+  const gone=e.st==="CANCELLED"||/^(canceled|cancelled)\s*:/i.test(e.s||"");
+  const push=st=>{if(!gone&&st>=from&&st<to)out.push({s:e.s||"(no title)",l:e.l||"",a:st,b:new Date(+st+len),all:e.a.all,uid:e.uid||""})};
+  if(!e.r||e.rid){push(e.a.d);return}
+  const R={};e.r.split(";").forEach(p=>{const i=p.indexOf("=");if(i>0)R[p.slice(0,i).toUpperCase()]=p.slice(i+1)});
+  const iv=Math.max(1,+R.INTERVAL||1),cnt=R.COUNT?+R.COUNT:Infinity,un=R.UNTIL?icsDate(R.UNTIL):null,until=un?(un.all?new Date(+un.d+864e5-1):un.d):null,st=e.a.d;
+  let n=0,guard=0;
+  // false = the series has ended (count, until, or past the window)
+  const emit=d=>{if(d>=to||until&&d>until||n>=cnt)return false;n++;if(!e.ex.includes(+d)&&!moved.has(e.uid+"|"+(+d)))push(d);return true};
+  const at=(y,m,dd)=>new Date(y,m,dd,st.getHours(),st.getMinutes(),st.getSeconds());
+  const F=(R.FREQ||"").toUpperCase(),DAYS=["SU","MO","TU","WE","TH","FR","SA"];
+  if(F==="DAILY"){for(let k=0;guard++<20000;k+=iv)if(!emit(at(st.getFullYear(),st.getMonth(),st.getDate()+k)))break}
+  else if(F==="WEEKLY"){
+   const by=(R.BYDAY?R.BYDAY.split(",").map(x=>DAYS.indexOf(x.replace(/^[+-]?\d+/,"").toUpperCase())).filter(x=>x>=0):[st.getDay()]).sort((a,b)=>a-b);
+   outer:for(let w=0;guard++<5000;w+=iv)for(const bd of by){const d=at(st.getFullYear(),st.getMonth(),st.getDate()-st.getDay()+w*7+bd);if(d<st)continue;if(!emit(d))break outer}}
+  else if(F==="MONTHLY"||F==="YEARLY"){
+   for(let k=0;guard++<5000;k+=iv){const d=F==="MONTHLY"?at(st.getFullYear(),st.getMonth()+k,st.getDate()):at(st.getFullYear()+k,st.getMonth(),st.getDate());
+    if(d.getDate()!==st.getDate())continue; // no 31st (or Feb 29) that month: skipped
+    if(!emit(d))break}}
+  else push(st);
+ });
+ return out.sort((x,y)=>x.a-y.a);
+}
+const ADDR_AB=[[/\bstreet\b/g,"st"],[/\bavenue\b/g,"ave"],[/\bav\b/g,"ave"],[/\bboulevard\b/g,"blvd"],[/\broad\b/g,"rd"],[/\bplace\b/g,"pl"],[/\bdrive\b/g,"dr"],[/\bparkway\b/g,"pkwy"],[/\bhighway\b/g,"hwy"],[/\bterrace\b/g,"ter"],[/\blane\b/g,"ln"],[/\bcourt\b/g,"ct"],[/\bsquare\b/g,"sq"],[/\bplaza\b/g,"plz"],[/\bwest\b/g,"w"],[/\beast\b/g,"e"],[/\bnorth\b/g,"n"],[/\bsouth\b/g,"s"],
+ ...["first","second","third","fourth","fifth","sixth","seventh","eighth","ninth","tenth","eleventh","twelfth"].map((w,i)=>[new RegExp("\\b"+w+"\\b","g"),String(i+1)])];
+function addrKey(s){let t=" "+String(s).toLowerCase().replace(/[–—]/g,"-").replace(/(\d)\s*-\s*(\d)/g,"$1-$2").replace(/\b(\d+)(st|nd|rd|th)\b/g,"$1").replace(/[^a-z0-9-]+/g," ")+" ";ADDR_AB.forEach(([r,v])=>t=t.replace(r,v));return t.replace(/\s+/g," ")}
+function calKeys(){const m=[];APPDIRS.forEach((name,proj)=>{const a=parseFolder(name).addr;if(!a)return;const k=addrKey(a);if(/\d/.test(k)&&/[a-z]{2}/.test(k))m.push([proj,k])});return m}
+function calMatch(ev,keys){
+ const txt=ev.s+" "+ev.l,nums=[...new Set(txt.match(/\b\d{6}\b/g)||[])],byNum=nums.filter(n=>APPDIRS.has(n));
+ if(byNum.length)return byNum;
+ if(nums.length&&!APPROOT)return nums; // Datto not reachable: the number is still the project #
+ const k=addrKey(txt);
+ return keys.filter(([p,ak])=>k.includes(ak)).map(x=>x[0]).sort((a,b)=>b.localeCompare(a,undefined,{numeric:true})).slice(0,4);
+}
+// The calendar is a pop-up over the page: Close, Escape or a click outside it closes it, and focus goes back to the button.
+function calClose(){const o=$("calov");if(o.hidden)return;o.hidden=true;$("calbox").innerHTML="";document.body.style.overflow="";if($("intake").dataset.stage==="choose"&&!$("intake").classList.contains("hide"))$("outlook").focus()}
+async function calOpen(refresh){
+ const o=$("calov"),box=$("calbox"),was=!o.hidden;o.hidden=false;document.body.style.overflow="hidden";
+ if(!box.querySelector(".cevs"))box.innerHTML=`<div class="calhd"><b>Outlook calendar</b><button type="button" class="sec mini" id="calx">Close</button></div><div class="muted">Opening your Outlook calendar…</div>`;
+ if(!was)$("calx").focus();
+ let r;try{r=CALWEB?await calWebGet(refresh):await host("calendar",{refresh:refresh?"1":""})}catch(e){box.innerHTML=`<div class="calhd"><b>Outlook calendar</b><button type="button" class="sec mini" id="calx">Close</button></div><div class="hint bad">The calendar couldn’t be opened (${esc(e.message)}).</div>`;return}
+ if(o.hidden)return;
+ CAL.sync=r.sync||"";CAL.syncOk=!!r.syncOk;
+ if(!r.has){calSetup(false);return}
+ calSyncNow();
+ if(CAL.text!==r.text)CAL.evs=null;CAL.text=r.text;CAL.at=r.at;CAL.err=r.err;CAL.keys=null;CAL.rep=new Map();
+ if(!refresh||!CALV.anchor){CALV.anchor=new Date();CALV.pick=-1}
+ calRender();
+}
+function calSetup(has){
+ $("calbox").classList.remove("calwide");
+ $("calbox").innerHTML=`<div class="calhd"><b>${has?"Change the calendar link":"Connect your Outlook calendar"}</b>${has?'<button type="button" class="sec mini" id="calback">Back to the calendar</button>':""}<button type="button" class="sec mini" id="calx">Close</button></div>
+<ol class="calsteps"><li>Open Outlook on the web (outlook.office.com), then Settings ⚙ → Calendar → Shared calendars.</li><li>Under <b>Publish a calendar</b>, choose your calendar and <b>Can view titles and locations</b>, then Publish.</li><li>Copy the <b>ICS</b> link (not the HTML one) and paste it below.</li></ol>
+<div class="row"><input type="password" id="calurl" autocomplete="off" spellcheck="false" placeholder="Paste the ICS link" aria-label="Calendar ICS link" style="flex:1;min-width:220px;width:auto"><button type="button" class="sec mini" id="calsave">Save link</button>${has?'<button type="button" class="sec mini" id="calrm">Remove link</button>':""}</div>
+<div class="hint" id="calhint" aria-live="polite"></div>
+${CALWEB?`<div class="calsync">Or open a calendar file (.ics) you already downloaded. <button type="button" class="sec mini" id="calfile">Open calendar file…</button></div>
+<p class="muted calnote">The link, the calendar copy and your ticks are kept only in this browser on this device. Anyone who has the link can see your calendar’s titles and locations, so don’t email or share it. To turn it off everywhere, choose Unpublish in Outlook.</p>`:`<div class="calsync">${CAL.sync?`Your other computers get this link and your ticks through <b>${esc(CAL.sync)}</b>. Use the same folder (your OneDrive) on each.`:"Ticks and this link are kept on this computer only. Choose a folder in your OneDrive to share them with your other computers."} <button type="button" class="sec mini" id="calsyncch">${CAL.sync?"Change folder…":"Choose folder…"}</button></div>
+<p class="muted calnote">The link is kept only in this computer’s app settings and isn’t shown again. Anyone who has it can see your calendar’s titles and locations, so don’t email or share it. To turn it off everywhere, choose Unpublish in Outlook.</p>`}`;
+ $("calurl").focus();
+}
+async function calSave(){
+ const u=$("calurl").value.trim(),h=$("calhint");if(!u){h.className="hint bad";h.textContent="Paste the ICS link first.";return}
+ h.className="hint";h.textContent="Checking the link…";$("calsave").disabled=true;
+ try{if(CALWEB)await calWebSet(u);else await host("calSet",{url:u});calOpen(false)}catch(e){h.className="hint bad";h.textContent=e.message;$("calsave").disabled=false}
+}
+/* Calendar grid, like Outlook: a week (days across, hours down, each event a block at its time; overlapping events share
+   the column) or a month (a chip per event, "+N more" opens that week). ‹ Today › moves; the view is remembered. */
+const CALV={view:"week",anchor:null,pick:-1};
+try{const v=localStorage.getItem("amaa_calview");if(v==="week"||v==="month")CALV.view=v}catch(e){}
+const DOW=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"],CALH=52;
+const addD=(d,n)=>new Date(d.getFullYear(),d.getMonth(),d.getDate()+n);
+const day0=d=>new Date(d.getFullYear(),d.getMonth(),d.getDate());
+const ctmS=d=>d.toLocaleTimeString("en-US",{hour:"numeric",minute:"2-digit"}).replace(":00","").replace(" AM","a").replace(" PM","p");
+function calFold(x){const n=APPDIRS.get(x);if(!n)return "";const f=parseFolder(n);return " · "+(f.name||f.addr||pddName(n))}
+function calTag(p){return p.length===1?`<span class="cp">→ ${esc(p[0]+calFold(p[0]))}</span>`:p.length?`<span class="cp">${p.length} projects at this address</span>`:`<span class="cp">No project found</span>`}
+function calTip(ev){return [ev.all?"All day":ctm(ev.a)+" – "+ctm(ev.b),ev.s,ev.l,ev.m.length===1?"→ "+ev.m[0]+calFold(ev.m[0]):ev.m.length?"Projects: "+ev.m.join(", "):"No project found. The date and times still fill in."].filter(Boolean).join("\n")}
+// An all-day event covers the days from its start up to (not including) its end.
+const calCovers=(ev,d)=>d>=day0(ev.a)&&(d<ev.b||+d===+day0(ev.a));
+/* Checking off visits. A visit is done when its project folder already has a report dated that day (any computer, from
+   the folder, so it can't be unticked here), when a report for it was saved from this app, or when the inspector ticks it.
+   Ticks are kept on this computer (amaa_caldone), by project and day for matched visits, else by the calendar event. */
+// Each tick is {on, t, how}: an untick is kept too (on:false), so the newest change wins when computers sync (see SyncNow
+// in the app: the ticks and the calendar link travel through a file in the inspector's OneDrive).
+let CALDONE={};try{CALDONE=JSON.parse(localStorage.getItem("amaa_caldone")||"{}")||{}}catch(e){CALDONE={}}
+Object.keys(CALDONE).forEach(k=>{const c=CALDONE[k];if(c&&c.on===undefined)c.on=true});
+function calDoneKeep(){try{localStorage.setItem("amaa_caldone",JSON.stringify(CALDONE))}catch(e){}}
+function calDoneSave(){const cut=Date.now()-400*864e5;Object.keys(CALDONE).forEach(k=>{if(!CALDONE[k]||CALDONE[k].t<cut)delete CALDONE[k]});calDoneKeep();calSyncSoon()}
+let calSyncT=0;function calSyncSoon(){clearTimeout(calSyncT);calSyncT=setTimeout(calSyncNow,400)}
+async function calSyncNow(){
+ if(!CALON||CALWEB)return;
+ try{const r=await host("calSync",{done:JSON.stringify(CALDONE)});if(!r||!r.done)return;
+  const before=JSON.stringify(CALDONE);CALDONE=r.done;calDoneKeep();CAL.sync=r.folder||"";CAL.syncOk=!!r.ok;
+  if(JSON.stringify(CALDONE)!==before&&!$("calov").hidden&&$("calbox").classList.contains("calwide"))calRender(true)}catch(e){}
+}
+if(CALON&&!CALWEB)setTimeout(calSyncNow,3000); // ticks made while the sync folder was out of reach go up on the next start
+const calKey=ev=>ev.m.length===1?"p|"+ev.m[0]+"|"+ymd(ev.a):"e|"+(ev.uid||ev.s)+"|"+(+ev.a);
+function calDoneOf(ev){
+ if(ev.m.length===1&&CAL.rep){const r=CAL.rep.get(ev.m[0]),f=r&&r.find(x=>x.date===ymd(ev.a));if(f)return {auto:true,name:f.name}}
+ const c=CALDONE[calKey(ev)];return c&&c.on?{auto:false}:null;
+}
+function calMarkSaved(proj,days){(days||[]).forEach(d=>{CALDONE["p|"+proj+"|"+d]={on:true,t:Date.now(),how:"saved"}});calDoneSave()}
+// The report dates of the projects on screen (visits up to now only), read once per opening; the grid redraws when they arrive.
+async function calFetchReports(){
+ if(!APPROOT)return;if(!CAL.rep)CAL.rep=new Map();
+ const now=new Date(),ps=[...new Set(CAL.list.filter(ev=>ev.m.length===1&&ev.a<=now).map(ev=>ev.m[0]))].filter(p=>!CAL.rep.has(p)&&APPDIRS.has(p));
+ if(!ps.length)return;ps.forEach(p=>CAL.rep.set(p,[]));
+ try{const r=await host("reportDates",{projs:ps.join(",")});Object.keys(r||{}).forEach(p=>CAL.rep.set(p,r[p]||[]))}catch(e){return}
+ if(!$("calov").hidden&&$("calbox").classList.contains("calwide"))calRender(true);
+}
+function calChk(ev,extra){
+ const d=calDoneOf(ev);
+ return `<button type="button" class="cchk" data-ck="${esc(calKey(ev))}" aria-pressed="${!!d}"${d&&d.auto?" disabled":""} title="${esc(d?d.auto?"Report in the project folder: "+d.name:"Done. Click to mark it not done.":"Mark this visit done")}" aria-label="${esc((d?"Done: ":"Mark done: ")+ev.s)}"${extra||""}>✓</button>`;
+}
+function calRange(){const a=day0(CALV.anchor);if(CALV.view==="week"){const s=addD(a,-a.getDay());return [s,addD(s,7)]}const f=new Date(a.getFullYear(),a.getMonth(),1),s=addD(f,-f.getDay());return [s,addD(s,42)]}
+function calWeek(s){
+ const days=[...Array(7)].map((_,i)=>addD(s,i)),today=ymd(new Date()),L=CAL.list.map((ev,i)=>({ev,i}));
+ const timed=L.filter(x=>!x.ev.all),alld=L.filter(x=>x.ev.all);
+ const mins=d=>d.getHours()*60+d.getMinutes();
+ let h0=7,h1=19;timed.forEach(({ev})=>{h0=Math.min(h0,ev.a.getHours());h1=Math.max(h1,ymd(ev.b)!==ymd(ev.a)?24:Math.ceil(mins(ev.b)/60))});h1=Math.min(24,Math.max(h1,h0+1));
+ const nom=ev=>(ev.m.length?"":" nom")+(calDoneOf(ev)?" done":"");
+ let h=`<div class="wkrow wkhead"><div></div>${days.map(d=>`<div class="${ymd(d)===today?"tod":""}">${DOW[d.getDay()]}<span class="dnum"><i>${d.getDate()}</i></span></div>`).join("")}</div>`;
+ if(alld.length)h+=`<div class="wkrow wkall"><div>all day</div>${days.map(d=>`<div>${alld.filter(x=>calCovers(x.ev,d)).map(x=>`<div class="crow">${calChk(x.ev)}<button type="button" class="cev allday${nom(x.ev)}" data-ci="${x.i}" title="${esc(calTip(x.ev))}">${esc(x.ev.s)}</button></div>`).join("")}</div>`).join("")}</div>`;
+ h+=`<div class="wkrow wkbody" style="height:${(h1-h0)*CALH}px"><div class="tlab">${[...Array(h1-h0-1)].map((_,k)=>{const hr=h0+k+1;return `<span style="top:${(k+1)*CALH}px">${hr%12||12} ${hr<12||hr===24?"AM":"PM"}</span>`}).join("")}</div>`;
+ days.forEach(d=>{const k=ymd(d),list=timed.filter(x=>ymd(x.ev.a)===k).sort((a,b)=>a.ev.a-b.ev.a||b.ev.b-a.ev.b);
+  // Lanes: events that overlap sit side by side, each cluster split evenly.
+  let cl=[],lanes=[],end=-1;const flush=()=>{cl.forEach(x=>x.n=lanes.length);cl=[];lanes=[]};
+  list.forEach(x=>{const st=mins(x.ev.a),en=Math.max(st+20,ymd(x.ev.b)!==k?1440:mins(x.ev.b));x.st=st;x.en=en;
+   if(cl.length&&st>=end)flush();let ln=lanes.findIndex(e=>e<=st);if(ln<0){ln=lanes.length;lanes.push(0)}lanes[ln]=en;x.lane=ln;cl.push(x);end=Math.max(end,en)});flush();
+  h+=`<div class="dcol${k===today?" tod":""}">`+list.map(x=>{const top=(x.st/60-h0)*CALH,ht=Math.max((x.en-x.st)/60*CALH-2,22);
+   return `<button type="button" class="cev${nom(x.ev)}" data-ci="${x.i}" title="${esc(calTip(x.ev))}" style="top:${top}px;height:${ht}px;--hh:${ht}px;left:calc(${x.lane} * 100% / ${x.n} + 2px);width:calc(100% / ${x.n} - 4px)"><span class="et">${esc(ctm(x.ev.a))} – ${esc(ctm(x.ev.b))}</span><b>${esc(x.ev.s)}</b>${calTag(x.ev.m)}${x.ev.l?`<small>${esc(x.ev.l)}</small>`:""}</button>`+
+    calChk(x.ev,` style="top:${top+4}px;left:calc((${x.lane} + 1) * 100% / ${x.n} - 28px)"`)}).join("");
+  if(k===today){const n=new Date(),t=(mins(n)/60-h0)*CALH;if(t>=0&&t<=(h1-h0)*CALH)h+=`<div class="nowl" style="top:${t}px" aria-hidden="true"></div>`}
+  h+=`</div>`});
+ CAL.scroll=Math.max(0,((timed.length?Math.min(...timed.map(x=>x.ev.a.getHours())):8)-h0-.5)*CALH);
+ return h+`</div>`;
+}
+function calMonth(s){
+ const am=CALV.anchor.getMonth(),today=ymd(new Date()),L=CAL.list.map((ev,i)=>({ev,i}));
+ let h=DOW.map(d=>`<div class="mdh">${d}</div>`).join("");
+ for(let n=0;n<42;n++){const d=addD(s,n),k=ymd(d),list=L.filter(x=>x.ev.all?calCovers(x.ev,d):ymd(x.ev.a)===k).sort((a,b)=>(b.ev.all-a.ev.all)||a.ev.a-b.ev.a);
+  h+=`<div class="mcell${d.getMonth()!==am?" out":""}${k===today?" tod":""}"><span class="mdn">${d.getDate()}</span>`+
+   list.slice(0,3).map(x=>`<div class="crow">${calChk(x.ev)}<button type="button" class="cev chip${x.ev.m.length?"":" nom"}${calDoneOf(x.ev)?" done":""}" data-ci="${x.i}" title="${esc(calTip(x.ev))}">${x.ev.all?"":`<span class="et">${esc(ctmS(x.ev.a))}</span> `}${esc(x.ev.s)}</button></div>`).join("")+
+   (list.length>3?`<button type="button" class="more" data-wk="${k}">+${list.length-3} more</button>`:"")+`</div>`}
+ CAL.scroll=0;return h;
+}
+// keep: redraw in place (a tick, or report dates arriving): same scroll, focus back on the same control.
+function calRender(keep){
+ const box=$("calbox"),now=new Date(),today=ymd(now),week=CALV.view==="week",oldC=box.querySelector(".cevs"),keepTop=keep&&oldC?oldC.scrollTop:null;
+ const fa=document.activeElement,fk=keep&&fa&&box.contains(fa)?(fa.dataset.ck?'[data-ck="'+CSS.escape(fa.dataset.ck)+'"]':fa.id?"#"+CSS.escape(fa.id):""):"";
+ box.classList.add("calwide");if(!CALV.anchor)CALV.anchor=now;
+ if(!CAL.evs){try{CAL.evs=icsParse(CAL.text)}catch(e){CAL.evs=[];usEv("err",{m:usScrub(e.message),ln:0})}}
+ if(!CAL.keys)CAL.keys=calKeys();
+ const [s,e]=calRange();let evs=[];
+ try{evs=calExpand(CAL.evs,addD(s,-14),e).filter(x=>x.a<e&&(x.a>=s||x.b>s))}catch(err){usEv("err",{m:usScrub(err.message),ln:0})}
+ CAL.list=evs.map(ev=>({...ev,m:calMatch(ev,CAL.keys)}));
+ const at=CAL.at?new Date(CAL.at):null,when=at?(ymd(at)===today?ctm(at):cday(at)+", "+ctm(at)):"";
+ const l=addD(e,-1),mo=d=>d.toLocaleDateString("en-US",{month:"long"}),rng=!week?CALV.anchor.toLocaleDateString("en-US",{month:"long",year:"numeric"}):
+  s.getMonth()===l.getMonth()?`${mo(s)} ${s.getDate()} – ${l.getDate()}, ${l.getFullYear()}`:`${mo(s).slice(0,3)} ${s.getDate()} – ${mo(l).slice(0,3)} ${l.getDate()}, ${l.getFullYear()}`;
+ const pk=CALV.pick>=0&&CAL.list[CALV.pick];
+ // Project visits so far in this view, and how many are checked off.
+ const sofar=CAL.list.filter(ev=>ev.m.length&&ev.a<=now),ndone=sofar.filter(calDoneOf).length;
+ box.innerHTML=`<div class="calhd"><b>Outlook calendar</b><span class="muted" style="font-size:12px">${when?"Updated "+esc(when):""}${CAL.sync?` · <span title="${esc(CAL.sync)}">${CAL.syncOk?"Ticks synced":"Sync folder out of reach; ticks sync later"}</span>`:CALWEB?" · Ticks on this device only":" · Ticks on this computer only"}</span><button type="button" class="sec mini" id="calref">Refresh</button>${CALWEB?`${calLS("amaa_calics")?'<button type="button" class="sec mini" id="calget">Get latest calendar</button>':""}<button type="button" class="sec mini" id="calfile">Open calendar file…</button>`:""}<button type="button" class="sec mini" id="callink">Calendar link</button><button type="button" class="sec mini" id="calx">Close</button></div>`+
+  `<div class="calnav"><button type="button" class="sec mini" id="caltoday">Today</button><button type="button" class="sec mini navb" id="calprev" aria-label="Previous ${week?"week":"month"}" title="Previous ${week?"week":"month"}">‹</button><button type="button" class="sec mini navb" id="calnext" aria-label="Next ${week?"week":"month"}" title="Next ${week?"week":"month"}">›</button><span class="rng">${esc(rng)}${sofar.length?`<small class="cdsum">${ndone} of ${sofar.length} visit${sofar.length===1?"":"s"} so far done</small>`:""}</span>`+
+  `<span class="seg" role="group" aria-label="View"><button type="button" id="calwk" aria-pressed="${week}">Week</button><button type="button" id="calmo" aria-pressed="${!week}">Month</button></span></div>`+
+  (CAL.err?`<div class="hint bad" style="margin:0 0 8px">${esc(CAL.err)}${CAL.text?` Showing the copy from ${esc(when)}.`:""}</div>`:"")+
+  `<div class="cevs ${week?"wk":"mo"}">${week?calWeek(s):calMonth(s)}</div>`+
+  (pk?`<div class="calpick"><span>Which project is “${esc(pk.s)}”?</span>${pk.m.map(x=>`<button type="button" class="sec mini" data-ci="${CALV.pick}" data-cp="${esc(x)}" title="${esc(APPDIRS.get(x)||x)}">${esc(x+calFold(x))}</button>`).join("")}<button type="button" class="sec mini" id="calpx">Cancel</button></div>`:"")+
+  `<div class="muted" style="font-size:12px;margin-top:8px">Click a visit: its project, date and times fill in. Tick ✓ when its report is done${CALWEB?"":"; visits whose report is already in the project folder tick themselves"}. Gray dashed visits have no matching project folder.</div>`;
+ box.querySelector(".cevs").scrollTop=keepTop!=null?keepTop:(CAL.scroll||0);
+ if(fk){const el=box.querySelector(fk);if(el)el.focus()}
+ if(!keep)calFetchReports();
+}
+function calNav(dir){const a=CALV.anchor;CALV.anchor=dir===0?new Date():CALV.view==="week"?addD(a,7*dir):new Date(a.getFullYear(),a.getMonth()+dir,1);CALV.pick=-1;calRender()}
+function calView(v){CALV.view=v;CALV.pick=-1;try{localStorage.setItem("amaa_calview",v)}catch(e){}calRender()}
+function calUse(ev,proj){
+ if(!ev)return;calClose();
+ if(proj&&pid($("f_proj").value)!==pid(proj)){$("f_proj").value=proj;pddClose();$("f_proj").dispatchEvent(new Event("input"))}
+ $("f_date").value=ymd(ev.a);$("f_date").dispatchEvent(new Event("input"));
+ if(!ev.all){$("f_in").value=hm(ev.a);$("f_in").classList.remove("filled");
+  if(ymd(ev.b)===ymd(ev.a)&&ev.b>ev.a){$("f_out").value=hm(ev.b);$("f_out").classList.remove("filled")}}
+ $("calmsg").textContent=`From your Outlook calendar: “${ev.s}”, ${cday(ev.a)}${ev.all?"":`, ${ctm(ev.a)} – ${ctm(ev.b)}`}. The times are the calendar’s; change them to when you actually arrived and left.`;
+ $("calmsg").hidden=false;
+ if(proj){goChk();stage("details")}
+ else{msg("That calendar event has no project number, and its address doesn’t match a project folder. Type the project # above, then choose Continue. The date and times are filled in.","hint");$("f_proj").focus()}
+}
+$("outlook").onclick=()=>{if(CALON)calOpen(false)};
+$("calov").addEventListener("mousedown",e=>{if(e.target===$("calov"))calClose()});
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!$("calov").hidden){e.preventDefault();calClose()}});
+// Tab stays inside the pop-up.
+$("calov").addEventListener("keydown",e=>{if(e.key!=="Tab")return;const f=[...$("calbox").querySelectorAll("button:not([disabled]),input")].filter(x=>x.offsetParent);if(!f.length)return;
+ const a=f[0],z=f[f.length-1];if(e.shiftKey&&document.activeElement===a){e.preventDefault();z.focus()}else if(!e.shiftKey&&document.activeElement===z){e.preventDefault();a.focus()}});
+$("calbox").addEventListener("click",async e=>{const b=e.target.closest("button");if(!b)return;
+ if(b.classList.contains("cchk")){const k=b.dataset.ck,c=CALDONE[k];CALDONE[k]={on:!(c&&c.on),t:Date.now(),how:"manual"};calDoneSave();calRender(true);return}
+ if(b.id==="calsyncch"){let p="";try{p=await host("calSyncFolder")}catch(err){}if(p){CAL.sync=p;await calSyncNow();calOpen(false)}return}
+ if(b.id==="calfile"){calWebFile();return}
+ if(b.id==="calget"){calWebGetLatest();return}
+ if(b.id==="calx")calClose();
+ else if(b.id==="calref")calOpen(true);
+ else if(b.id==="callink")calSetup(true);
+ else if(b.id==="calback")calOpen(false);
+ else if(b.id==="calsave")calSave();
+ else if(b.id==="calrm"){try{if(CALWEB)await calWebSet("");else await host("calSet",{url:""})}catch(err){}calSetup(false);$("calhint").className="hint";$("calhint").textContent=(CAL.sync?"Link removed from this computer and your other synced computers.":"Link removed from this computer.")+" To stop it working everywhere, unpublish it in Outlook."}
+ else if(b.id==="caltoday")calNav(0);
+ else if(b.id==="calprev")calNav(-1);
+ else if(b.id==="calnext")calNav(1);
+ else if(b.id==="calwk")calView("week");
+ else if(b.id==="calmo")calView("month");
+ else if(b.id==="calpx"){CALV.pick=-1;calRender()}
+ else if(b.dataset.wk){const[y,m,d]=b.dataset.wk.split("-").map(Number);CALV.anchor=new Date(y,m-1,d);calView("week")}
+ else if(b.dataset.cp!==undefined)calUse(CAL.list[+b.dataset.ci],b.dataset.cp);
+ else if(b.dataset.ci!==undefined){const ev=CAL.list[+b.dataset.ci];if(!ev)return;if(ev.m.length>1){CALV.pick=+b.dataset.ci;calRender();const p=$("calbox").querySelector(".calpick button");if(p)p.focus()}else calUse(ev,ev.m[0]||"")}
+ // The grid is redrawn, so focus goes back to the same button.
+ if(/^cal(today|prev|next|wk|mo)$/.test(b.id)&&$(b.id))$(b.id).focus()});
+$("calbox").addEventListener("keydown",e=>{if(e.target.id==="calurl"&&e.key==="Enter"){e.preventDefault();calSave()}});
 /* ---- Field Companion: a visit's notes, NCRs, photos and markups taken on a phone, saved there as a .zip holding
    amaa-field.json. Step 1 reads it (project #, date, times, person met with); Start puts it into this visit's saved notes
    and photos, so it comes back in Step 3 like any saved draft. Phone markups stay editable (original photo + marks). ---- */
@@ -1529,7 +1886,7 @@ async function goHome(force){
  PHOTOS.forEach(p=>p.url&&URL.revokeObjectURL(p.url));
  PREVPH.forEach(g=>g.pics.forEach(p=>{if(p.url)URL.revokeObjectURL(p.url)}));PREVPH=[];PPKEY="";PPDRAFT=null;
  ITEMS=[];picked=new Set();SUBS=new Set();TBS={};NCRFIX={};NCRNO={};PREV=null;PHOTOS=[];TPL=null;LAST=null;LASTCTX=null;filledFor="";appLoaded="";PROPC.clear();propRun++;
- FCPKG=null;FCSAVED="";$("fcmsg").hidden=true;
+ FCPKG=null;FCSAVED="";$("fcmsg").hidden=true;calClose();$("calmsg").hidden=true;
  renderPrev();renderAll();renderPhotos();chk();
  if(APP&&APPROOT)msg(appListMsg());else lookup();
  goChk();show("intake");stage("choose");window.scrollTo(0,0);
@@ -2867,6 +3224,8 @@ async function offerDocx(){
    if(r.canceled){usEv("savecancel");m.textContent="Not saved. Select Save Word report to try again.";return}
    usEv("saved",{act:US.act+Math.max(0,Date.now()-US.stepT-US.idle),infolder:!!r.inFolder,miss:(LAST.missing||[]).length+(LAST.oiMissing?1:0)+(LAST.photoMissing?1:0)+(LAST.fixMiss||[]).length,items:picked.size,ph:PHOTOS.length});
    delete APPREP[k];
+   // The calendar ticks this project's visit on the report's days.
+   calMarkSaved(k,visitDays());if(CAL.rep)CAL.rep.delete(k);
    m.innerHTML=esc((r.inFolder?`Saved in the project’s ${fold(r.sub)} folder as ${r.name}`:`Saved as ${r.path}`)+(r.renamed?" (a report with that name was already there, so it was kept)":"")+`, built from ${LAST.from}.`+(r.tooLong?" Its full path is over 259 characters, which Word can’t open: shorten the project, phase or file name in File Explorer.":"")+miss)+(r.inFolder?"":" <b>This report is only on this computer, not in the project folder. Move it to the project’s Reports folder when you can.</b>")+' <button type="button" class="sec mini" id="openw">Open in Word</button> <button type="button" class="sec mini" id="openf">Show in folder</button>';
    $("openw").onclick=()=>host("open",{path:r.path}).catch(()=>{});$("openf").onclick=()=>host("showFile",{path:r.path}).catch(()=>{});
   }catch(e){m.textContent=`Couldn’t save ${LAST.name} (${e.message}).`}
@@ -2937,7 +3296,7 @@ $("gen").onclick=async()=>{
  await savePrev(date,sec,ini);
 };
 // Which copy this is: the claude.ai page, the offline HTML file or the desktop app (all built from the same version).
-const VER=91;$("ver").textContent=`Version ${VER}${APP?" · desktop app":PWA?" · phone app":location.protocol==="file:"?" · offline":""}${DEMO?" · demo V3":""}`;
+const VER=92;$("ver").textContent=`Version ${VER}${APP?" · desktop app":PWA?" · phone app":location.protocol==="file:"?" · offline":""}${DEMO?" · demo V3":""}`;
 /* ---- Usage screen: reads every laptop's log from the projects folder and works out the funnel, stalls and flags. ---- */
 const US_STEPS=["choose","details","pick","notes","review"],US_SNAME={choose:"Choose project",details:"Report details",pick:"Pick inspections",notes:"Write notes",review:"Review and save"};
 const US_CNAME={go:"Continue",start:"Next: choose inspections",mk:"Create entries",gen:"Generate report",dlbtn:"Save Word report",newrep:"Start another report",homebtn:"Home",b0:"Back (details)",b1:"Back (inspections)",b2:"Change inspections",addins:"Add inspector",addc:"Add item",all:"Select all",prevbtn:"View previous report",addoi:"Add open item",phonebtn:"Send photos from phone",openw:"Open in Word",openf:"Show in folder",rootbtn:"Browse for folder",rootuse:"Use this folder",rootretry:"Retry folder",rp_phone:"Replace from phone",rp_file:"Replace from computer",mu_done:"Markup: Done",mu_cancel:"Markup: Cancel",ph_done:"Phone window: Done","data-pcopy":"Copy to today",themebtn:"Color theme","n_#":"the notes box","d_#":"the drawing box","s_#":"the result selector",f_proj:"the project number",f_date:"the date",f_in:"the time in",f_out:"the time out",f_insp:"the inspector name",f_email:"the inspector email"};
@@ -3013,7 +3372,11 @@ load();initEmail();chk();renderAll();
 
 <style>
 [hidden]{display:none!important}
-#outlook,.or:has(+#outlook){display:none}
+@media (max-width:600px){
+ #calov{padding:0}
+ #calbox,#calbox.calwide{width:100%;height:100vh;height:100dvh;max-height:none;border-radius:0;border:0;padding:12px 12px calc(12px + env(safe-area-inset-bottom,0px))}
+ #calbox .calhd b{flex-basis:100%}
+}
 @media (max-width:900px),(pointer:coarse){
  input:not([type=checkbox]):not([type=radio]),select,textarea,[contenteditable]{font-size:16px!important}
  button,.btn,summary{min-height:44px}
