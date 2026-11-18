@@ -1469,6 +1469,7 @@ const CAL={text:"",at:"",err:"",list:[]};
    this browser's localStorage (this device only) and downloads it itself. Outlook may refuse a web page's download (no
    CORS); then the inspector opens the link (the browser downloads calendar.ics) and picks that file ("Open calendar file"). */
 const CALWEB=PWA&&!APP;
+const CAL_OLSET="https://outlook.office.com/calendar/options/calendar/SharedCalendars"; // Publish a calendar is on this page
 const CALON=(APP||CALWEB)&&!OFF.has("calendar");
 if(CALON){$("outlook").disabled=false;$("outlook").innerHTML="Choose from Outlook calendar"}
 const calLS=(k,v)=>{try{if(v===undefined)return localStorage.getItem(k)||"";if(v)localStorage.setItem(k,v);else localStorage.removeItem(k)}catch(e){}return ""};
@@ -1601,7 +1602,8 @@ async function calOpen(refresh){
 function calSetup(has){
  $("calbox").classList.remove("calwide");
  $("calbox").innerHTML=`<div class="calhd"><b>${has?"Change the calendar link":"Connect your Outlook calendar"}</b>${has?'<button type="button" class="sec mini" id="calback">Back to the calendar</button>':""}<button type="button" class="sec mini" id="calx">Close</button></div>
-<ol class="calsteps"><li>Open Outlook on the web (outlook.office.com), then Settings ⚙ → Calendar → Shared calendars.</li><li>Under <b>Publish a calendar</b>, choose your calendar and <b>Can view titles and locations</b>, then Publish.</li><li>Copy the <b>ICS</b> link (not the HTML one) and paste it below.</li></ol>
+<div class="row" style="margin:6px 0 4px"><button type="button" id="calopenol">Open Outlook calendar settings</button></div>
+<ol class="calsteps"><li>Choose <b>Open Outlook calendar settings</b> (sign in if asked). It opens Settings → Calendar → Shared calendars.</li><li>Under <b>Publish a calendar</b>, choose your calendar and <b>Can view titles and locations</b>, then Publish.</li><li>Copy the <b>ICS</b> link (not the HTML one) and paste it below.</li></ol>
 <div class="row"><input type="password" id="calurl" autocomplete="off" spellcheck="false" placeholder="Paste the ICS link" aria-label="Calendar ICS link" style="flex:1;min-width:220px;width:auto"><button type="button" class="sec mini" id="calsave">Save link</button>${has?'<button type="button" class="sec mini" id="calrm">Remove link</button>':""}</div>
 <div class="hint" id="calhint" aria-live="polite"></div>
 ${CALWEB?`<div class="calsync">Or open a calendar file (.ics) you already downloaded. <button type="button" class="sec mini" id="calfile">Open calendar file…</button></div>
@@ -1743,6 +1745,7 @@ $("calov").addEventListener("keydown",e=>{if(e.key!=="Tab")return;const f=[...$(
 $("calbox").addEventListener("click",async e=>{const b=e.target.closest("button");if(!b)return;
  if(b.classList.contains("cchk")){const k=b.dataset.ck,c=CALDONE[k];CALDONE[k]={on:!(c&&c.on),t:Date.now(),how:"manual"};calDoneSave();calRender(true);return}
  if(b.id==="calsyncch"){let p="";try{p=await host("calSyncFolder")}catch(err){}if(p){CAL.sync=p;await calSyncNow();calOpen(false)}return}
+ if(b.id==="calopenol"){if(CALWEB)window.open(CAL_OLSET,"_blank","noopener");else try{await host("calOutlook")}catch(err){}return}
  if(b.id==="calfile"){calWebFile();return}
  if(b.id==="calget"){calWebGetLatest();return}
  if(b.id==="calx")calClose();
